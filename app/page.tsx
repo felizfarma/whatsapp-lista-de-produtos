@@ -3,7 +3,6 @@
 import { useState } from 'react'
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
-// import { toast } from "@/hooks/use-toast" // Removed import
 import { PlusCircle, Trash2 } from 'lucide-react'
 
 interface Product {
