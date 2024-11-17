@@ -9,19 +9,20 @@ interface Product {
   name: string
   oldPrice: string
   newPrice: string
+  quantity: string
 }
 
 export default function ProductListGenerator() {
-  const [products, setProducts] = useState<Product[]>([{ name: '', oldPrice: '', newPrice: '' }])
+  const [products, setProducts] = useState<Product[]>([{ name: '', oldPrice: '', newPrice: '', quantity: '1' }])
   const [copyButtonText, setCopyButtonText] = useState('Copiar Texto')
 
   const addProduct = () => {
-    setProducts([...products, { name: '', oldPrice: '', newPrice: '' }])
+    setProducts([...products, { name: '', oldPrice: '', newPrice: '', quantity: '1' }])
   }
 
   const removeProduct = (index: number) => {
     const updatedProducts = products.filter((_, i) => i !== index)
-    setProducts(updatedProducts.length ? updatedProducts : [{ name: '', oldPrice: '', newPrice: '' }])
+    setProducts(updatedProducts.length ? updatedProducts : [{ name: '', oldPrice: '', newPrice: '', quantity: '1' }])
   }
 
   const updateProduct = (index: number, field: keyof Product, value: string) => {
@@ -34,7 +35,7 @@ export default function ProductListGenerator() {
         updatedProducts[index].name && 
         updatedProducts[index].newPrice) {
       // Add a new empty product
-      setProducts([...updatedProducts, { name: '', oldPrice: '', newPrice: '' }])
+      setProducts([...updatedProducts, { name: '', oldPrice: '', newPrice: '', quantity: '1' }])
     }
   }
 
@@ -44,7 +45,7 @@ export default function ProductListGenerator() {
       product.name.trim() !== '' || product.oldPrice.trim() !== '' || product.newPrice.trim() !== ''
     )
     if (filledProducts.length < products.length) {
-      setProducts([...filledProducts, { name: '', oldPrice: '', newPrice: '' }])
+      setProducts([...filledProducts, { name: '', oldPrice: '', newPrice: '', quantity: '1' }])
     }
   }
 
@@ -60,12 +61,13 @@ export default function ProductListGenerator() {
     products.forEach(product => {
       if (product.name) {
         const newPrice = parseFloat(product.newPrice.replace(',', '.'))
-        total += isNaN(newPrice) ? 0 : newPrice
+        const quantity = parseInt(product.quantity) || 1
+        total += (isNaN(newPrice) ? 0 : newPrice) * quantity
 
         if (product.oldPrice) {
-          text += `- ${product.name} - de ~R$ ${formatCurrency(product.oldPrice)}~ por *R$ ${formatCurrency(product.newPrice)}*.\n`
+          text += `- ${product.name} (${quantity} un.)- de ~R$ ${formatCurrency(product.oldPrice)}~ por *R$ ${formatCurrency(product.newPrice)}*.\n`
         } else {
-          text += `- ${product.name} - *R$ ${formatCurrency(product.newPrice)}*.\n`
+          text += `- ${product.name} (${quantity} un.)- *R$ ${formatCurrency(product.newPrice)}*.\n`
         }
       }
     })
@@ -110,6 +112,15 @@ export default function ProductListGenerator() {
             onChange={(e) => updateProduct(index, 'newPrice', e.target.value)}
             onBlur={handleBlur}
             className="w-24"
+          />
+          <Input
+            placeholder="Qtd."
+            value={product.quantity}
+            onChange={(e) => updateProduct(index, 'quantity', e.target.value)}
+            onBlur={handleBlur}
+            className="w-16"
+            type="number"
+            min="1"
           />
           <Button
             onClick={() => removeProduct(index)}
