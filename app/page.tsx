@@ -65,7 +65,7 @@ export default function ProductListGenerator() {
         if (product.oldPrice) {
           text += `- ${product.name} - de ~R$ ${formatCurrency(product.oldPrice)}~ por *R$ ${formatCurrency(product.newPrice)}*.\n`
         } else {
-          text += `- ${product.name} - por *R$ ${formatCurrency(product.newPrice)}*.\n`
+          text += `- ${product.name} - *R$ ${formatCurrency(product.newPrice)}*.\n`
         }
       }
     })
